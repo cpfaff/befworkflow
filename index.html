@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Workflow</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Workflow">
+  <meta name="author" content="Claas-Thido Pfaff">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+    <link rel="stylesheet" href = "assets/css/ribbons.css">
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+    <!-- END LOGO SLIDE -->
+    
+
+    <!-- TITLE SLIDE -->
+    <!-- Should I move this to a Local Layout File? -->
+    <slide class="title-slide segue nobackground">
+      <hgroup class="auto-fadein">
+        <h1>Workflow</h1>
+        <h2>BEFdata + rbefdata</h2>
+        <p>Claas-Thido Pfaff<br/></p>
+      </hgroup>
+      <a href="https://github.com/cpfaff/befworkflow/zipball/gh-pages" class="example">
+        Download
+      </a>
+          </slide>
+
+    <!-- SLIDES -->
+      <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Install packages</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>devtools (devel + install github)</li>
+</ul>
+
+<pre><code class="r">install.packages(&quot;devtools&quot;)
+</code></pre>
+
+<ul>
+<li>Trim (leading/trailing spaces)</li>
+</ul>
+
+<pre><code class="r">install.packages(&quot;gdata&quot;)
+</code></pre>
+
+<ul>
+<li>taxize (taxonomy tasks)</li>
+</ul>
+
+<pre><code class="r">install_github(&quot;taxize_&quot;, &quot;ropensci&quot;)
+</code></pre>
+
+<ul>
+<li>rbefdata (interface to BEFdata)</li>
+</ul>
+
+<pre><code class="r">remove.packages(&quot;rbefdata&quot;)
+install_github(username = &quot;befdata&quot;, repo = &quot;rbefdata&quot;, subdir = &quot;rbefdata&quot;)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>List Options (rbefdata)</h2>
+  </hgroup>
+  <article>
+    <pre><code class="r">require(rbefdata)
+bef.options()
+</code></pre>
+
+<pre><code>## $url
+## [1] &quot;http://china.befdata.biow.uni-leipzig.de&quot;
+## 
+## $tematres_url
+## [1] &quot;http://tematres.befdata.biow.uni-leipzig.de/vocab/index.php&quot;
+## 
+## $tematres_service_url
+## [1] &quot;http://tematres.befdata.biow.uni-leipzig.de/vocab/services.php&quot;
+## 
+## $download_dir
+## [1] &quot;downloads&quot;
+## 
+## $user_credentials
+## [1] &quot;&quot;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Set Options (rbefdata)</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>The URL (<a href="http://stage.china.befdata.biow.uni-leipzig.de">Workshop Portal</a>)</li>
+</ul>
+
+<pre><code class="r">bef.options(url = &quot;http://stage.china.befdata.biow.uni-leipzig.de&quot;)
+</code></pre>
+
+<ul>
+<li>The credentials (<a href="http://stage.china.befdata.biow.uni-leipzig.de/profile">your profile</a>)</li>
+</ul>
+
+<pre><code class="r">bef.options(user_credentials = &quot;BCeqHdtGA7v2MHd15l&quot;)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Get data</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Get dataset from <a href="http://stage.china.befdata.biow.uni-leipzig.de/paperproposals/1">proposal</a> with id #1 </li>
+</ul>
+
+<pre><code class="r">datasets = bef.portal.get.datasets_for_proposal(id = 1)
+length(datasets)
+</code></pre>
+
+<pre><code>## [1] 2
+</code></pre>
+
+<pre><code class="r">titles = sapply(datasets, function(x) attributes(x)$title)
+titles
+</code></pre>
+
+<pre><code>## [1] &quot;Abundance of Tree and Shrub species in the Comparative Study Plots (CSP) - BEFdata tutorial&quot;                 
+## [2] &quot;Abundance of Tree and Shrub species in the Comparative Study Plots (CSP) - BEFdata tutorial misspelt species&quot;
+</code></pre>
+
+<pre><code class="r">dataset = datasets[[2]]
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Inspect the data</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Inspect the dataset (metadata)</li>
+</ul>
+
+<pre><code class="r">attributes(dataset)$title
+</code></pre>
+
+<pre><code>## [1] &quot;Abundance of Tree and Shrub species in the Comparative Study Plots (CSP) - BEFdata tutorial misspelt species&quot;
+</code></pre>
+
+<pre><code class="r">names(attributes(dataset))
+</code></pre>
+
+<pre><code>##  [1] &quot;names&quot;                    &quot;class&quot;                    &quot;row.names&quot;                &quot;title&quot;                    &quot;abstract&quot;                
+##  [6] &quot;publicationDate&quot;          &quot;language&quot;                 &quot;creators&quot;                 &quot;authors&quot;                  &quot;intellectualRights&quot;      
+## [11] &quot;distribution&quot;             &quot;keywords&quot;                 &quot;generalTaxonomicCoverage&quot; &quot;samplingDescription&quot;      &quot;spatial_coverage&quot;        
+## [16] &quot;temporal_coverage&quot;        &quot;related_material&quot;         &quot;columns&quot;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Inspect the data</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>About the spces column and their description</li>
+</ul>
+
+<pre><code class="r">names(dataset)
+</code></pre>
+
+<pre><code>## [1] &quot;year&quot;      &quot;csp&quot;       &quot;species&quot;   &quot;abundance&quot;
+</code></pre>
+
+<pre><code class="r">attributes(dataset)$column$description
+</code></pre>
+
+<pre><code>## [1] &quot;Date time information, given as year or as date or as date time. (year: first year of the releve; Datagroup description: Date time information)&quot;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+## [2] &quot;Reasearch plots of the Biodiversity - Ecosystem functioning experiment (BEF-China). There are three main sites for research plots in the BEF Experiment: Comparative Study Plots (CSP) in the  Gutianshan Nature Reserve, having a size of 30x30m^2, measured on the ground. Main Experiment plots have a size of 1 mu, which is about 25x25m^2 in horizontal projection. Pilot Study Plots have a size of 1x1 m^2.  \n\nResearch plots on the main experiment have a \&quot;p\&quot; in front of their IDs and then a 6 digit code: Plots in the main sites A and B are named according to their position in the original spreadsheet, in which they were designed.  They consist of 6 digits: _1st digit_: Site (1:A, 2:B), _digit 2and3_: southwards row: as in spreadsheets the rows are named from the top to the bottom; _digit 4 and 5_: westward column: as in the original spreadsheet, but the letters are converted to numbers (A=01, B=02); _6th digit_: indicator, if the plot has been shifted a quarter mu.  Example: \&quot;p205260\&quot;: \&quot;p\&quot; means that this is a plot that is specified.  \&quot;2\&quot; means, that we are at site B.  Now the coordinates of the south - west corner: \&quot;0526\&quot;.  Since \&quot;e\&quot; is the fifth letter of the alphabet, this is Plot E26.   The last digit \&quot;0\&quot; means that this plot was not moved by a quarter of a Mu, as some sites in Site A. The 6th digit can also indicate the subplot within the plot. \&quot;5\&quot;, \&quot;6\&quot;, \&quot;7\&quot;, \&quot;8\&quot; indicate the northwest, northeast, southeast, and southwest quarter plot respectively. (csp: name of the comparative study plot; Datagroup description: BEF research plot name)&quot;
+## [3] &quot;The scientific species fullnames are based on the \&quot;Flora of China\&quot; identified by Teng Fang and verified by Helge Bruelheide (trees) and Alexandra Efmeier (herbs). Scientific species names consist of epithet and genus. For identification, the Author name and the year of the publications of the description are required. (species: full name of the species, genus and epiteth; Datagroup description: Scientific plant species name)&quot;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+## [4] &quot;Counting the individuals of a given taxon, also called abundance. (abundance: abundance of the species; Datagroup description: Organism count)&quot;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Species names</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Prepare species list</li>
+</ul>
+
+<pre><code class="r">require(gdata)
+species = trim(dataset$species)
+unique_species = unique(as.character(species))
+head(unique_species, 7)
+</code></pre>
+
+<pre><code>## [1] &quot;Acer amplum&quot;         &quot;Acer cordatum&quot;       &quot;Acer pubipalmatum&quot;   &quot;Adinandra millettii&quot; &quot;Adinandra illettii&quot;  &quot;Alangium urzii&quot;     
+## [7] &quot;Alangium kurzii&quot;
+</code></pre>
+
+<ul>
+<li>Load (<a href="http://ropensci.org/tutorials/taxize_tutorial.html">taxize</a>)</li>
+</ul>
+
+<pre><code class="r">require(taxize)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Species names</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li><p>Taxize offers access to databases like: </p>
+
+<ul>
+<li>Integrated Taxonomic Information System <a href="http://www.itis.gov/">itis</a> </li>
+<li>National Center for Biotechnology Information <a href="http://www.ncbi.nlm.nih.gov/">ncbi</a> </li>
+<li>International Union for Conservation of Nature <a href="http://www.iucn.org/">iucn</a></li>
+</ul></li>
+<li><p>But that is not all (e.g create phylogeny tree, see <a href="http://ropensci.org/tutorials/taxize_tutorial.html">tutorial</a>)</p></li>
+<li><p>Example for species resolving</p></li>
+</ul>
+
+<pre><code class="r">species_list = c(&quot;Helianthus annuus&quot;, &quot;Pinus contort&quot;)
+query_response = tnrs(query = species_list)[, -c(6:7)]
+query_response
+</code></pre>
+
+<pre><code>##       submittedName      acceptedName    sourceId score       matchedName
+## 2 Helianthus annuus Helianthus annuus iPlant_TNRS     1 Helianthus annuus
+## 3 Helianthus annuus Helianthus annuus        NCBI     1 Helianthus annuus
+## 1     Pinus contort    Pinus contorta iPlant_TNRS  0.98    Pinus contorta
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-9" style="background:#EEE;">
+  <hgroup>
+    <h2>Your turn</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Resolve all the species in vector unique_species</li>
+</ul>
+
+<pre><code class="r">tnrs(query = ...)
+</code></pre>
+
+<ul>
+<li>Find the entries that need correction (Hint: score!)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>A solution</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Check the unique names of our species list</li>
+</ul>
+
+<pre><code class="r">query_response = tnrs(query = unique_species)[, -c(6:7)]
+head(query_response, 9)[c(&quot;submittedName&quot;, &quot;acceptedName&quot;, &quot;score&quot;)]
+</code></pre>
+
+<pre><code>##           submittedName        acceptedName score
+## 2           Acer amplum         Acer amplum     1
+## 153       Acer cordatum       Acer cordatum     1
+## 154       Acer cordatum       Acer cordatum     1
+## 190   Acer pubipalmatum    Acer pauciflorum     1
+## 129 Adinandra millettii Adinandra millettii     1
+## 130 Adinandra millettii Adinandra millettii     1
+## 289  Adinandra illettii Adinandra millettii  0.98
+## 90       Alangium urzii     Alangium kurzii  0.97
+## 182     Alangium kurzii     Alangium kurzii     1
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>A solution</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Pick the entries that are lower than 1</li>
+</ul>
+
+<pre><code class="r">index_of_need_attention = which(query_response$score &lt; 1)
+subset_that_needs_attention = unique(query_response[index_of_need_attention, ])
+subset_that_needs_attention
+</code></pre>
+
+<pre><code>##                     submittedName                 acceptedName    sourceId score                  matchedName
+## 289            Adinandra illettii          Adinandra millettii iPlant_TNRS  0.98          Adinandra millettii
+## 90                 Alangium urzii              Alangium kurzii iPlant_TNRS  0.97              Alangium kurzii
+## 5             Camelliana fraterna            Camellia fraterna iPlant_TNRS  0.96            Camellia fraterna
+## 133 Cyclobalanopsis myrsinaefolia Cyclobalanopsis myrsinifolia iPlant_TNRS  0.97 Cyclobalanopsis myrsinifolia
+## 131            Glochidion puberum                              iPlant_TNRS  0.95         Glochidion puberulum
+## 120                  Ilex pururea               Ilex chinensis iPlant_TNRS  0.98                Ilex purpurea
+## 1             Loropetalum chinens         Loropetalum chinense iPlant_TNRS  0.98         Loropetalum chinense
+## 243              Prunus discoidea                       Prunus iPlant_TNRS   0.5                       Prunus
+## 163         Quercus phillyreoides       Quercus phillyraeoides iPlant_TNRS  0.99       Quercus phillyraeoides
+## 61               Quercus serratas              Quercus serrata iPlant_TNRS  0.98              Quercus serrata
+## 101        Symplocos oblongifolia                    Symplocos iPlant_TNRS   0.5                    Symplocos
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>A solution</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Pick the entries that are lower 1 and bigger 0.5</li>
+</ul>
+
+<pre><code class="r">index_of_need_attention = which(query_response$score &lt; 1 &amp; query_response$score &gt; 0.5)
+subset_that_needs_attention = unique(query_response[index_of_need_attention, ])
+subset_that_needs_attention
+</code></pre>
+
+<pre><code>##                     submittedName                 acceptedName    sourceId score                  matchedName
+## 289            Adinandra illettii          Adinandra millettii iPlant_TNRS  0.98          Adinandra millettii
+## 90                 Alangium urzii              Alangium kurzii iPlant_TNRS  0.97              Alangium kurzii
+## 5             Camelliana fraterna            Camellia fraterna iPlant_TNRS  0.96            Camellia fraterna
+## 133 Cyclobalanopsis myrsinaefolia Cyclobalanopsis myrsinifolia iPlant_TNRS  0.97 Cyclobalanopsis myrsinifolia
+## 131            Glochidion puberum                              iPlant_TNRS  0.95         Glochidion puberulum
+## 120                  Ilex pururea               Ilex chinensis iPlant_TNRS  0.98                Ilex purpurea
+## 1             Loropetalum chinens         Loropetalum chinense iPlant_TNRS  0.98         Loropetalum chinense
+## 163         Quercus phillyreoides       Quercus phillyraeoides iPlant_TNRS  0.99       Quercus phillyraeoides
+## 61               Quercus serratas              Quercus serrata iPlant_TNRS  0.98              Quercus serrata
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Match back and combine</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Match species to subset submitted names</li>
+</ul>
+
+<pre><code class="r">match_index = match(as.character(species), subset_that_needs_attention$submittedName)
+</code></pre>
+
+<ul>
+<li> Create new vector containing the corrections</li>
+</ul>
+
+<pre><code class="r">corrected_names = subset_that_needs_attention$matchedName[match_index]
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Match back and combine</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>merge function picks from vectors (if else)</li>
+</ul>
+
+<pre><code class="r">merge_em &lt;- function(base_vec, merge_vec) {
+    output = vector()
+    for (i in 1:length(base_vec)) {
+        if (is.na(base_vec[i])) {
+            output[i] = merge_vec[i]
+        } else {
+            output[i] = base_vec[i]
+        }
+    }
+    return(output)
+}
+</code></pre>
+
+<ul>
+<li>Define base and merge vector</li>
+</ul>
+
+<pre><code class="r">base = corrected_names
+mergein = as.character(species)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Match back and combine</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>create new dataframe</li>
+</ul>
+
+<pre><code class="r">merged_names = merge_em(base_vec = base, merge_vec = mergein)
+corrected_dataset = data.frame(dataset, species_corrected = merged_names)
+head(corrected_dataset, 15)
+</code></pre>
+
+<pre><code>##    year   csp             species abundance   species_corrected
+## 1  2008 CSP18         Acer amplum         2         Acer amplum
+## 2  2008 CSP03         Acer amplum         1         Acer amplum
+## 3  2008 CSP24         Acer amplum         1         Acer amplum
+## 4  2008 CSP20         Acer amplum         1         Acer amplum
+## 5  2008 CSP21       Acer cordatum         1       Acer cordatum
+## 6  2008 CSP21       Acer cordatum         1       Acer cordatum
+## 7  2008 CSP17       Acer cordatum         1       Acer cordatum
+## 8  2008 CSP20       Acer cordatum         2       Acer cordatum
+## 9  2008 CSP13       Acer cordatum         1       Acer cordatum
+## 10 2008 CSP18       Acer cordatum         6       Acer cordatum
+## 11 2008 CSP17   Acer pubipalmatum         1   Acer pubipalmatum
+## 12 2008 CSP06 Adinandra millettii       123 Adinandra millettii
+## 13 2008 CSP15 Adinandra millettii        19 Adinandra millettii
+## 14 2008 CSP02 Adinandra millettii        35 Adinandra millettii
+## 15 2008 CSP18 Adinandra millettii         2 Adinandra millettii
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Upload dataset</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li><p>push back a corrected version to BEFdata</p></li>
+<li><p>Please use own title if you execute this step </p></li>
+</ul>
+
+<pre><code class="r">title = &quot;Abundance of Tree and Shrub species in the Comparative Study Plots (CSP) - BEFdata tutorial (species corrected)&quot;
+bef.portal.upload.dataset(dataset = corrected_dataset, dataset_title = title)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Get higher taxonomic names</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li><p>Use taxize to retrive higher taxon names</p></li>
+<li><p>Create a new dataframe </p>
+
+<ul>
+<li>corrected unique species names </li>
+<li>order</li>
+<li>family</li>
+<li>genus</li>
+</ul></li>
+<li><p>Can be used to calculate phylogenetic diversity</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Get higher taxonomic names</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Example on retrieving classifications</li>
+</ul>
+
+<pre><code class="r">species_examples = c(&quot;Homo sapiens&quot;, &quot;Rattus rattus&quot;)
+</code></pre>
+
+<ul>
+<li>The databases can be e.g. <a href="http://www.itis.gov/">itis</a> or <a href="http://www.ncbi.nlm.nih.gov/">ncbi</a></li>
+</ul>
+
+<pre><code class="r">classification_list = classification(species_examples, db = &quot;itis&quot;)
+classification_list[[1]]
+</code></pre>
+
+<pre><code>##      rankName    taxonName    tsn
+## 1     Kingdom     Animalia 202423
+## 2      Phylum     Chordata 158852
+## 3   Subphylum   Vertebrata 331030
+## 4       Class     Mammalia 179913
+## 5    Subclass       Theria 179916
+## 6  Infraclass     Eutheria 179925
+## 7       Order     Primates 180089
+## 8      Family    Hominidae 180090
+## 9       Genus         Homo 180091
+## 10    Species Homo sapiens 180092
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Get higher taxonomic names</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Get only parts of intrest</li>
+</ul>
+
+<pre><code class="r">tax_name(query = &quot;Homo Sapiens&quot;, get = &quot;genus&quot;, db = &quot;ncbi&quot;)
+</code></pre>
+
+<pre><code>##   genus
+## 1  Homo
+</code></pre>
+
+<pre><code class="r">tax_name(query = species_examples, get = &quot;family&quot;, db = &quot;ncbi&quot;)
+</code></pre>
+
+<pre><code>##      family
+## 1 Hominidae
+## 2   Muridae
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-20" style="background:#EEE;">
+  <hgroup>
+    <h2>Your turn</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li><p>Get the order, family and genus from ncbi for unique corrected species</p></li>
+<li><p>Be nice and only query server once!</p>
+
+<ul>
+<li>do not use: tax_name(...)</li>
+<li>use classification(...)</li>
+</ul></li>
+<li><p>Hint: use R apply functions</p></li>
+<li><p>When finished upload the dataset to the portal!</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>A solution</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Get: 
+
+<ul>
+<li>order, family and genus (unique corrected species use &quot;ncbi&quot;)</li>
+</ul></li>
+</ul>
+
+<pre><code class="r">species_list = unique(as.character(corrected_dataset$species_corrected))
+classification_species = classification(species_list, db = &quot;ncbi&quot;)
+</code></pre>
+
+<ul>
+<li>Extract (order):</li>
+</ul>
+
+<pre><code class="r">extraction_ncbi_order = sapply(classification_species, function(x) if (length(x) != 3) {
+    NA
+} else {
+    subset(x, x$Rank == &quot;order&quot;)
+}$ScientificName)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>A solution</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Extract (family):</li>
+</ul>
+
+<pre><code class="r">extraction_ncbi_family = sapply(classification_species, function(x) if (length(x) != 3) {
+    NA
+} else {
+    subset(x, x$Rank == &quot;family&quot;)
+}$ScientificName)
+</code></pre>
+
+<ul>
+<li>Extract (genus):</li>
+</ul>
+
+<pre><code class="r">extraction_ncbi_genus = sapply(classification_species, function(x) if (length(x) != 3) {
+    NA
+} else {
+    subset(x, x$Rank == &quot;genus&quot;)
+}$ScientificName)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>A solution</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Create data frame:</li>
+</ul>
+
+<pre><code class="r">extraction_ncbi_order_fam_genus = cbind(extraction_ncbi_order, extraction_ncbi_family, extraction_ncbi_genus)
+species_taxonic = data.frame(species = species_list, extraction_ncbi_order_fam_genus)
+head(species_taxonic, 5)
+</code></pre>
+
+<pre><code>##                                 species extraction_ncbi_order extraction_ncbi_family extraction_ncbi_genus
+## Acer amplum                 Acer amplum                    NA                     NA                    NA
+## Acer cordatum             Acer cordatum            Sapindales              Aceraceae                  Acer
+## Acer pubipalmatum     Acer pubipalmatum                    NA                     NA                    NA
+## Adinandra millettii Adinandra millettii              Ericales       Pentaphylacaceae             Adinandra
+## Alangium kurzii         Alangium kurzii              Cornales              Cornaceae              Alangium
+</code></pre>
+
+<ul>
+<li>Upload:</li>
+</ul>
+
+<pre><code class="r">bef.portal.upload.dataset(dataset = species_taxonic, dataset_title = &quot;Taxonomic information for species in ...&quot;)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+      <slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Thanks four your attention</h2>
+  </hgroup>
+  <article>
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+
+  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+<!-- Grab CDN jQuery, fall back to local if offline -->
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+<script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery-1.7.min.js"><\/script>')</script>
+<!-- Load Javascripts for Widgets -->
+<!-- LOAD HIGHLIGHTER JS FILES -->
+<script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<!-- DONE LOADING HIGHLIGHTER JS FILES -->
+</html>
