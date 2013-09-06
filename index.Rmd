@@ -8,9 +8,6 @@ highlighter : highlight.js  # {highlight.js, prettify, highlight}
 hitheme     : tomorrow      # 
 widgets     : []            # {mathjax, quiz, bootstrap}
 mode        : selfcontained # {standalone, draft}
-github      : 
-  user      : cpfaff
-  repo      : befworkflow
 ---
 
 ```{r setup, cache = F, include = F, eval = T}
